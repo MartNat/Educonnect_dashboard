@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduConnect CRM Dashboard</title>
+  <!-- Include Chart.js for the bar chart -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Reset and basic styling */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f7fa;
+      display: flex;
+      min-height: 100vh;
+      color: #333;
+    }
+    .container {
+      display: flex;
+      width: 100%;
+      max-width: 1200px;
+      margin: auto;
+    }
+    
+    /* Sidebar Navigation */
+    .sidebar {
+      width: 220px;
+      background-color: #2c3e50;
+      padding-top: 20px;
+      min-height: 100vh;
+      color: #fff;
+    }
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 1.2em;
+    }
+    .sidebar ul {
+      list-style: none;
+    }
+    .sidebar ul li a {
+      display: block;
+      padding: 15px 20px;
+      text-decoration: none;
+      color: #fff;
+      transition: background-color 0.3s ease;
+    }
+    .sidebar ul li a:hover {
+      background-color: #34495e;
+    }
+    
+    /* Main Content Area */
+    .content {
+      flex: 1;
+      padding: 30px 20px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    header h1 {
+      font-size: 2em;
+      color: #2c3e50;
+    }
+    
+    /* Overview Cards */
+    .overview {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-bottom: 30px;
+    }
+    .card {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      flex: 1 1 calc(25% - 20px);
+      margin: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    .card h2 {
+      margin: 0;
+      font-size: 2.5em;
+      color: #27ae60;
+    }
+    .card p {
+      margin-top: 10px;
+      font-size: 1em;
+      color: #7f8c8d;
+    }
+
+    /* Chart Section */
+    .section {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .section h3 {
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+
+    /* Responsive Styling */
+    @media only screen and (max-width: 768px) {
+      .overview {
+        flex-direction: column;
+      }
+      .card {
+        flex: 1 1 100%;
+        margin: 10px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar Navigation -->
+  <nav class="sidebar">
+    <h2>Menu</h2>
+    <ul>
+      <li><a href="/">Dashboard</a></li>
+      <li><a href="/profile">Student Profile</a></li>
+      <li><a href="/applications">Applications</a></li>
+      <li><a href="/tasks">Tasks</a></li>
+      <li><a href="/interviews">Interviews</a></li>
+      <li><a href="/placements">Placements</a></li>
+      <li><a href="/programs">Programs</a></li>
+      <li><a href="/settings">Settings</a></li>
+    </ul>
+  </nav>
+  
+  <!-- Main Content Area -->
+  <div class="content">
+    <header>
+      <h1>EduConnect CRM Dashboard</h1>
+    </header>
+    
+    <!-- Dashboard Overview -->
+    <div class="overview">
+      <div class="card">
+        <h2>32%</h2>
+        <p>Conversion Rate</p>
+      </div>
+      <div class="card">
+        <h2>247</h2>
+        <p>Active Leads</p>
+      </div>
+      <div class="card">
+        <h2>86</h2>
+        <p>Applications</p>
+      </div>
+      <div class="card">
+        <h2>18</h2>
+        <p>Tasks</p>
+      </div>
+    </div>
+    
+    <!-- Lead Conversion Chart -->
+    <div class="section">
+      <h3>Lead Conversion Forecast</h3>
+      <canvas id="conversionChart" width="400" height="200"></canvas>
+    </div>
+  </div>
+  
+  <!-- Chart Script -->
+  <script>
+    const ctx = document.getElementById('conversionChart').getContext('2d');
+    const conversionChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['UK', 'USA', 'Canada', 'Australia', 'Germany', 'France', 'Spain', 'Italy'],
+        datasets: [{
+          label: 'Conversion Rate (%)',
+          data: [32, 45, 28, 35, 40, 30, 25, 50],
+          backgroundColor: 'rgba(39, 174, 96, 0.6)',
+          borderColor: 'rgba(39, 174, 96, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

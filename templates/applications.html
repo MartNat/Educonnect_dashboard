@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduConnect Applications</title>
+  <style>
+    /* Reset and basic styling */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f7fa;
+      display: flex;
+      min-height: 100vh;
+      color: #333;
+    }
+    .container {
+      display: flex;
+      width: 100%;
+      max-width: 1200px;
+      margin: auto;
+    }
+    
+    /* Sidebar Navigation */
+    .sidebar {
+      width: 220px;
+      background-color: #2c3e50;
+      padding-top: 20px;
+      min-height: 100vh;
+      color: #fff;
+    }
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 1.2em;
+    }
+    .sidebar ul {
+      list-style: none;
+    }
+    .sidebar ul li a {
+      display: block;
+      padding: 15px 20px;
+      text-decoration: none;
+      color: #fff;
+      transition: background-color 0.3s ease;
+    }
+    .sidebar ul li a:hover {
+      background-color: #34495e;
+    }
+    
+    /* Main Content Area */
+    .content {
+      flex: 1;
+      padding: 30px 20px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    header h1 {
+      font-size: 2em;
+      color: #2c3e50;
+    }
+    
+    /* Status Cards */
+    .status-cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-bottom: 30px;
+    }
+    .card {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      flex: 1 1 calc(25% - 20px);
+      margin: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    .card h2 {
+      margin: 0;
+      font-size: 2.5em;
+      color: #27ae60;
+    }
+    .card p {
+      margin-top: 10px;
+      font-size: 1em;
+      color: #7f8c8d;
+    }
+
+    /* Recent Applications Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      text-align: left;
+      padding: 8px;
+    }
+    th {
+      background-color: #2c3e50;
+      color: #fff;
+    }
+
+    /* Responsive Styling */
+    @media only screen and (max-width: 768px) {
+      .status-cards {
+        flex-direction: column;
+      }
+      .card {
+        flex: 1 1 100%;
+        margin: 10px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+      <h2>Menu</h2>
+      <ul>
+        <li><a href="/">Dashboard</a></li>
+        <li><a href="/profile">Student Profile</a></li>
+        <li><a href="/applications">Applications</a></li>
+        <li><a href="/tasks">Tasks</a></li>
+        <li><a href="/interviews">Interviews</a></li>
+        <li><a href="/placements">Placements</a></li>
+        <li><a href="/programs">Programs</a></li>
+        <li><a href="/settings">Settings</a></li>
+      </ul>
+    </nav>
+    
+    <!-- Main Content Area -->
+    <div class="content">
+      <header>
+        <h1>Applications Overview</h1>
+      </header>
+      
+      <!-- Status Cards -->
+      <div class="status-cards">
+        <div class="card">
+          <h2>129</h2>
+          <p>Active Applications</p>
+        </div>
+        <div class="card">
+          <h2>45</h2>
+          <p>Pending Documents</p>
+        </div>
+        <div class="card">
+          <h2>37</h2>
+          <p>Accepted Offers</p>
+        </div>
+        <div class="card">
+          <h2>12</h2>
+          <p>Upcoming Deadlines</p>
+        </div>
+      </div>
+      
+      <!-- Recent Applications Table -->
+      <h3>Recent Applications</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Applicant</th>
+            <th>University</th>
+            <th>Course</th>
+            <th>Status</th>
+            <th>Submission Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Michael Brown</td>
+            <td>Oxford University</td>
+            <td>Computer Science</td>
+            <td>Submitted</td>
+            <td>Oct 15, 2023</td>
+          </tr>
+          <tr>
+            <td>Emma Wilson</td>
+            <td>MIT</td>
+            <td>Electrical Engineering</td>
+            <td>In Progress</td>
+            <td>Oct 13, 2023</td>
+          </tr>
+          <tr>
+            <td>James Taylor</td>
+            <td>Stanford</td>
+            <td>Business Administration</td>
+            <td>Accepted</td>
+            <td>Oct 10, 2023</td>
+          </tr>
+          <tr>
+            <td>Sophia Chen</td>
+            <td>Harvard</td>
+            <td>International Relations</td>
+            <td>In Progress</td>
+            <td>Oct 8, 2023</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>
