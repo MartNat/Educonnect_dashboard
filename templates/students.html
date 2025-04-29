@@ -174,22 +174,22 @@
                         <tbody>
                             {% for student in students %}
                             <tr>
-                                <td><a href="{{ url_for('student_profile', name=student.name) }}">{{ student.name }}</a></td>
-                                <td>{{ student.source }}</td>
-                                <td>{{ student.response }}</td>
-                                <td>{{ student.destination }}</td>
-                                <td>{{ student.course_of_study }}</td>
-                                <td>{{ student.level_of_study }}</td>
+                                <td><a href="{{ url_for('student_profile', name=student['name']) }}">{{ student['name'] }}</a></td>
+                                <td>{{ student['source'] }}</td>
+                                <td>{{ student['response'] }}</td>
+                                <td>{{ student['destination'] }}</td>
+                                <td>{{ student['course_of_study'] }}</td>
+                                <td>{{ student['level_of_study'] }}</td>
                                 <td>
                                     <div class="progress">
-                                        <div class="progress-bar {% if student.conversion_probability > 70 %}bg-success
-                                                                      {% elif student.conversion_probability > 40 %}bg-warning
+                                        <div class="progress-bar {% if student['conversion_probability'] > 70 %}bg-success
+                                                                      {% elif student['conversion_probability'] > 40 %}bg-warning
                                                                       {% else %}bg-danger{% endif %}"
                                              role="progressbar"
-                                             style="width: {{ student.conversion_probability }}%"
-                                             aria-valuenow="{{ student.conversion_probability }}"
+                                             style="width: {{ student['conversion_probability'] }}%"
+                                             aria-valuenow="{{ student['conversion_probability'] }}"
                                              aria-valuemin="0"
-                                             aria-valuemax="100">{{ student.conversion_probability }}%</div>
+                                             aria-valuemax="100">{{ student['conversion_probability'] }}%</div>
                                     </div>
                                 </td>
                             </tr>
