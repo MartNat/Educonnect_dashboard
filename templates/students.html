@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students - EduConnect Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Reset and basic styling */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fa;
+            display: flex;
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 220px;
+            background-color: #2c3e50;
+            padding-top: 20px;
+            min-height: 100vh;
+            color: #fff;
+        }
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+        .sidebar ul {
+            list-style: none;
+        }
+        .sidebar ul li a {
+            display: block;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: #fff;
+            transition: background-color 0.3s ease;
+        }
+        .sidebar ul li a:hover {
+            background-color: #34495e;
+        }
+        
+        /* Main Content Area */
+        .content {
+            flex: 1;
+            padding: 30px 20px;
+        }
+        
+        /* Form and Table Styling */
+        .form-card {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .table-container {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <h2>Menu</h2>
+            <ul>
+                <li><a href="/">Dashboard</a></li>
+                <li><a href="/students">Students</a></li>
+                <li><a href="/applications">Applications</a></li>
+                <li><a href="/analytics">Analytics</a></li>
+                <li><a href="/tasks">Tasks</a></li>
+                <li><a href="/interviews">Interviews</a></li>
+                <li><a href="/placements">Placements</a></li>
+                <li><a href="/programs">Programs</a></li>
+                <li><a href="/settings">Settings</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="content">
+            <header>
+                <h1>Student Management</h1>
+            </header>
+
+            <!-- Add Student Form -->
+            <div class="form-card">
+                <h2 class="mb-4">Add New Student</h2>
+                <form action="/add_student" method="POST">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="name" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="source" class="form-label">Source</label>
+                            <select class="form-select" id="source" name="source" required>
+                                <option value="">Select source...</option>
+                                <option value="walk-in">Walk-in</option>
+                                <option value="fairs">Fairs</option>
+                                <option value="school visit">School Visit</option>
+                                <option value="referrals">Referrals</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="response" class="form-label">Response Type</label>
+                            <select class="form-select" id="response" name="response" required>
+                                <option value="">Select response type...</option>
+                                <option value="emails">Emails</option>
+                                <option value="calls">Calls</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="destination" class="form-label">Destination</label>
+                            <select class="form-select" id="destination" name="destination" required>
+                                <option value="">Select destination...</option>
+                                <option value="UK">UK</option>
+                                <option value="US">US</option>
+                                <option value="Australia">Australia</option>
+                                <option value="Canada">Canada</option>
+                                <option value="New Zealand">New Zealand</option>
+                                <option value="Ireland">Ireland</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="course_of_study" class="form-label">Course of Study</label>
+                            <input type="text" class="form-control" id="course_of_study" name="course_of_study" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="level_of_study" class="form-label">Level of Study</label>
+                            <select class="form-select" id="level_of_study" name="level_of_study" required>
+                                <option value="">Select level...</option>
+                                <option value="undergraduate">Undergraduate</option>
+                                <option value="postgraduate">Postgraduate</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Student</button>
+                </form>
+            </div>
+
+            <!-- Students Table -->
+            <div class="table-container">
+                <h2 class="mb-4">Student Records</h2>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Name</th>
+                                <th>Source</th>
+                                <th>Response</th>
+                                <th>Destination</th>
+                                <th>Course</th>
+                                <th>Level</th>
+                                <th>Conversion Probability</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                            <tr>
+                                <td><a href="{{ url_for('student_profile', name=student.name) }}">{{ student.name }}</a></td>
+                                <td>{{ student.source }}</td>
+                                <td>{{ student.response }}</td>
+                                <td>{{ student.destination }}</td>
+                                <td>{{ student.course_of_study }}</td>
+                                <td>{{ student.level_of_study }}</td>
+                                <td>
+                                    <div class="progress">
+                                        <div class="progress-bar {% if student.conversion_probability > 70 %}bg-success
+                                                                      {% elif student.conversion_probability > 40 %}bg-warning
+                                                                      {% else %}bg-danger{% endif %}"
+                                             role="progressbar"
+                                             style="width: {{ student.conversion_probability }}%"
+                                             aria-valuenow="{{ student.conversion_probability }}"
+                                             aria-valuemin="0"
+                                             aria-valuemax="100">{{ student.conversion_probability }}%</div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
