@@ -125,17 +125,17 @@
   <nav class="sidebar">
     <h2>Menu</h2>
     <ul>
-      <li><a href="/">Dashboard</a></li>
-      <li><a href="/students">Students</a></li>
-      <li><a href="/applications">Applications</a></li>
-      <li><a href="/analytics">Analytics</a></li>
-      <li><a href="/tasks">Tasks</a></li>
-      <li><a href="/interviews">Interviews</a></li>
-      <li><a href="/placements">Placements</a></li>
-      <li><a href="/programs">Programs</a></li>
-      <li><a href="/settings">Settings</a></li>
-  </ul>
-  </nav>
+        <li><a href="{{ url_for('index') }}" class="{{ is_active_page('index') }}">Dashboard</a></li>
+        <li><a href="{{ url_for('students') }}" class="{{ is_active_page('students') }}">Students</a></li>
+        <li><a href="{{ url_for('applications') }}" class="{{ is_active_page('applications') }}">Applications</a></li>
+        <li><a href="{{ url_for('analytics') }}" class="{{ is_active_page('analytics') }}">Analytics</a></li>
+        <li><a href="{{ url_for('tasks') }}" class="{{ is_active_page('tasks') }}">Tasks</a></li>
+        <li><a href="{{ url_for('interviews') }}" class="{{ is_active_page('interviews') }}">Interviews</a></li>
+        <li><a href="{{ url_for('placements') }}" class="{{ is_active_page('placements') }}">Placements</a></li>
+        <li><a href="{{ url_for('programs') }}" class="{{ is_active_page('programs') }}">Programs</a></li>
+        <li><a href="{{ url_for('settings') }}" class="{{ is_active_page('settings') }}">Settings</a></li>
+    </ul>
+</nav>
   
   <!-- Main Content Area -->
   <div class="content">

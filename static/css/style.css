@@ -1,4 +1,4 @@
-/* Reset and basic styling */
+/* Common styles for all pages */
 *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
@@ -47,12 +47,22 @@ body {
     transition: background-color 0.3s ease;
 }
 
-.sidebar ul li a:hover {
+.sidebar ul li a:hover,
+.sidebar ul li a.active {
     background-color: #34495e;
 }
 
-/* Content Area */
+/* Main Content Area */
 .content {
     flex: 1;
     padding: 30px 20px;
+}
+
+/* Common Cards */
+.section {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
