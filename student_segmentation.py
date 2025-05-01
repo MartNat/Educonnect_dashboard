@@ -126,6 +126,35 @@ def train_model():
     save_model(rf_model, encoders)
     return rf_model, encoders
 
+def calculate_initial_probability(student_data):
+    """Calculate initial conversion probability for a new student based on their profile"""
+    base_probability = 30  # Base probability starts at 30%
+    
+    # Source/Lead Type bonus
+    source_bonus = {
+        'referrals': 15,    # Highest conversion rate
+        'school visit': 10,  # Direct engagement
+        'fairs': 8,         # Active interest
+        'walk-in': 5        # General inquiry
+    }.get(student_data['source'].lower(), 0)
+    
+    # Study Level bonus
+    level_bonus = 10 if student_data['level_of_study'].lower() == 'postgraduate' else 5
+    
+    # Destination/Country bonus
+    destination_bonus = {
+        'UK': 5,       # Fastest processing
+        'Canada': 4,   # Good acceptance rate
+        'Australia': 3,# Moderate processing
+        'US': 2        # Longer processing
+    }.get(student_data['destination'].upper(), 0)
+    
+    # Calculate total probability
+    total_probability = base_probability + source_bonus + level_bonus + destination_bonus
+    
+    # Cap at 100%
+    return min(round(total_probability), 100)
+
 def predict_conversion(student_data, model, encoders):
     """Predict conversion probability for a single student"""
     try:

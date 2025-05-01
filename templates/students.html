@@ -5,20 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Students - EduConnect CRM</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
+    <div class="dashboard-container">
         <!-- Sidebar Navigation -->
         <nav class="sidebar">
             <h2>Menu</h2>
             <ul>
-                <li><a href="{{ url_for('index') }}" class="{{ is_active_page('index') }}">Dashboard</a></li>
-                <li><a href="{{ url_for('students') }}" class="{{ is_active_page('students') }}">Students</a></li>
-                <!-- ... other navigation items ... -->
+                <li>
+                    <a href="{{ url_for('index') }}" class="nav-link {{ 'active' if request.endpoint == 'index' }}">
+                        <i class="bi bi-house-door"></i> Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('students') }}" class="nav-link {{ 'active' if request.endpoint == 'students' }}">
+                        <i class="bi bi-people"></i> Students
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('applications') }}" class="nav-link {{ 'active' if request.endpoint == 'applications' }}">
+                        <i class="bi bi-file-text"></i> Applications
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('analytics') }}" class="nav-link {{ 'active' if request.endpoint == 'analytics' }}">
+                        <i class="bi bi-graph-up"></i> Analytics
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('tasks') }}" class="nav-link {{ 'active' if request.endpoint == 'tasks' }}">
+                        <i class="bi bi-check2-square"></i> Tasks
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('interviews') }}" class="nav-link {{ 'active' if request.endpoint == 'interviews' }}">
+                        <i class="bi bi-calendar-event"></i> Interviews
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('placements') }}" class="nav-link {{ 'active' if request.endpoint == 'placements' }}">
+                        <i class="bi bi-briefcase"></i> Placements
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('programs') }}" class="nav-link {{ 'active' if request.endpoint == 'programs' }}">
+                        <i class="bi bi-mortarboard"></i> Programs
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('settings') }}" class="nav-link {{ 'active' if request.endpoint == 'settings' }}">
+                        <i class="bi bi-gear"></i> Settings
+                    </a>
+                </li>
             </ul>
         </nav>
 
+        <!-- Main Content -->
         <div class="content">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1>Student Records</h1>
@@ -26,6 +70,47 @@
                     Add New Student
                 </button>
             </div>
+            <div class="table-container">
+                <h2 class="mb-4">Student Records</h2>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Name</th>
+                                <th>Source</th>
+                                <th>Response</th>
+                                <th>Destination</th>
+                                <th>Course</th>
+                                <th>Level</th>
+                                <th>Conversion Probability</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                            <tr>
+                                <td><a href="{{ url_for('student_profile', name=student['name']) }}">{{ student['name'] }}</a></td>
+                                <td>{{ student['source'] }}</td>
+                                <td>{{ student['response'] }}</td>
+                                <td>{{ student['destination'] }}</td>
+                                <td>{{ student['course_of_study'] }}</td>
+                                <td>{{ student['level_of_study'] }}</td>
+                                <td>
+                                    <div class="progress">
+                                        <div class="progress-bar {% if student['conversion_probability'] > 70 %}bg-success
+                                                                      {% elif student['conversion_probability'] > 40 %}bg-warning
+                                                                      {% else %}bg-danger{% endif %}"
+                                             role="progressbar"
+                                             style="width: {{ student['conversion_probability'] }}%"
+                                             aria-valuenow="{{ student['conversion_probability'] }}"
+                                             aria-valuemin="0"
+                                             aria-valuemax="100">{{ student['conversion_probability'] }}%</div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
 
             <!-- Students Table -->
             <div class="table-responsive">

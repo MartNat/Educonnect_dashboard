@@ -1,14 +1,32 @@
 <nav class="sidebar">
     <h2>Menu</h2>
     <ul>
-        <li><a href="/">Dashboard</a></li>
-        <li><a href="/students">Students</a></li>
-        <li><a href="/applications">Applications</a></li>
-        <li><a href="/analytics">Analytics</a></li>
-        <li><a href="/tasks">Tasks</a></li>
-        <li><a href="/interviews">Interviews</a></li>
-        <li><a href="/placements">Placements</a></li>
-        <li><a href="/programs">Programs</a></li>
-        <li><a href="/settings">Settings</a></li>
+        <li><a href="{{ url_for('index') }}" class="nav-link {{ is_active_page('index') }}">
+            <i class="bi bi-house"></i> Dashboard</a>
+        </li>
+        <li><a href="{{ url_for('students') }}" class="nav-link {{ is_active_page('students') }}">
+            <i class="bi bi-people"></i> Students</a>
+        </li>
+        <li><a href="{{ url_for('applications') }}" class="nav-link {{ is_active_page('applications') }}">
+            <i class="bi bi-file-text"></i> Applications</a>
+        </li>
+        <li><a href="{{ url_for('analytics') }}" class="nav-link {{ is_active_page('analytics') }}">
+            <i class="bi bi-graph-up"></i> Analytics</a>
+        </li>
+        <li><a href="{{ url_for('tasks') }}" class="nav-link {{ is_active_page('tasks') }}">
+            <i class="bi bi-check2-square"></i> Tasks</a>
+        </li>
+        <li><a href="{{ url_for('interviews') }}" class="nav-link {{ is_active_page('interviews') }}">
+            <i class="bi bi-calendar-event"></i> Interviews</a>
+        </li>
+        <li><a href="{{ url_for('placements') }}" class="nav-link {{ is_active_page('placements') }}">
+            <i class="bi bi-briefcase"></i> Placements</a>
+        </li>
+        <li><a href="{{ url_for('programs') }}" class="nav-link {{ is_active_page('programs') }}">
+            <i class="bi bi-mortarboard"></i> Programs</a>
+        </li>
+        <li><a href="{{ url_for('settings') }}" class="nav-link {{ is_active_page('settings') }}">
+            <i class="bi bi-gear"></i> Settings</a>
+        </li>
     </ul>
 </nav>

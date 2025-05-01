@@ -1,149 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Settings</title>
-  <style>
-    /* Base Styles */
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f7fa;
-      display: flex;
-      min-height: 100vh;
-      color: #333;
-    }
-    .container {
-      display: flex;
-      width: 100%;
-      max-width: 1200px;
-      margin: auto;
-    }
-
-    /* Sidebar */
-    .sidebar {
-      width: 220px;
-      background-color: #2c3e50;
-      padding-top: 20px;
-      min-height: 100vh;
-      color: #fff;
-    }
-    .sidebar h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      font-size: 1.2em;
-    }
-    .sidebar ul {
-      list-style: none;
-    }
-    .sidebar ul li a {
-      display: block;
-      padding: 15px 20px;
-      text-decoration: none;
-      color: #fff;
-      transition: background-color 0.3s ease;
-    }
-    .sidebar ul li a:hover {
-      background-color: #34495e;
-    }
-
-    /* Content Area */
-    .content {
-      flex: 1;
-      padding: 30px 20px;
-    }
-    header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    header h1 {
-      font-size: 2em;
-      color: #2c3e50;
-    }
-
-    /* Section Styling */
-    section {
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    section h3 {
-      margin-bottom: 15px;
-      font-size: 1.4em;
-      border-bottom: 1px solid #ddd;
-    }
-    ul {
-      list-style: none;
-      padding: 0;
-      line-height: 1.6;
-    }
-
-    /* Responsive Design */
-    @media only screen and (max-width: 768px) {
-      .container {
-        flex-direction: column;
-      }
-      .sidebar {
-        width: 100%;
-        min-height: auto;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - EduConnect CRM</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 </head>
 <body>
-  <div class="container">
-    <!-- Sidebar -->
-    <nav class="sidebar">
-      <h2>Menu</h2>
-      <ul>
-        <li><a href="/">Dashboard</a></li>
-        <li><a href="/students">Students</a></li>
-        <!--<li><a href="/profile">Student Profile</a></li>-->
-        <li><a href="/applications">Applications</a></li>
-        <li><a href="/analytics">Analytics</a></li>
-        <li><a href="/tasks">Tasks</a></li>
-        <li><a href="/interviews">Interviews</a></li>
-        <li><a href="/placements">Placements</a></li>
-        <li><a href="/programs">Programs</a></li>
-        <li><a href="/settings">Settings</a></li>
-    </ul>
-    </nav>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <h2>Menu</h2>
+            <ul>
+                <li>
+                    <a href="{{ url_for('index') }}" class="nav-link {{ 'active' if request.endpoint == 'index' }}">
+                        <i class="bi bi-house-door"></i> Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('students') }}" class="nav-link {{ 'active' if request.endpoint == 'students' }}">
+                        <i class="bi bi-people"></i> Students
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('applications') }}" class="nav-link {{ 'active' if request.endpoint == 'applications' }}">
+                        <i class="bi bi-file-text"></i> Applications
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('analytics') }}" class="nav-link {{ 'active' if request.endpoint == 'analytics' }}">
+                        <i class="bi bi-graph-up"></i> Analytics
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('tasks') }}" class="nav-link {{ 'active' if request.endpoint == 'tasks' }}">
+                        <i class="bi bi-check2-square"></i> Tasks
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('interviews') }}" class="nav-link {{ 'active' if request.endpoint == 'interviews' }}">
+                        <i class="bi bi-calendar-event"></i> Interviews
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('placements') }}" class="nav-link {{ 'active' if request.endpoint == 'placements' }}">
+                        <i class="bi bi-briefcase"></i> Placements
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('programs') }}" class="nav-link {{ 'active' if request.endpoint == 'programs' }}">
+                        <i class="bi bi-mortarboard"></i> Programs
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('settings') }}" class="nav-link {{ 'active' if request.endpoint == 'settings' }}">
+                        <i class="bi bi-gear"></i> Settings
+                    </a>
+                </li>
+            </ul>
+        </nav>
 
-    <!-- Content -->
-    <div class="content">
-      <header>
-        <h1>Settings</h1>
-      </header>
-      <section>
-        <h3>User Preferences</h3>
-        <ul>
-          <li><strong>Language:</strong> English</li>
-          <li><strong>Timezone:</strong> GMT+3</li>
-        </ul>
-      </section>
-      <section>
-        <h3>Account Management</h3>
-        <ul>
-          <li>Change Password</li>
-          <li>Update Profile</li>
-          <li>Manage Linked Accounts</li>
-        </ul>
-      </section>
-      <section>
-        <h3>System Settings</h3>
-        <ul>
-          <li>Enable Notifications</li>
-          <li>Set Default Dashboard View</li>
-        </ul>
-      </section>
+        <!-- Main Content -->
+        <div class="content">
+            <div class="container-fluid">
+                <!-- Page Heading -->
+                <h1 class="h3 mb-4 text-gray-800">Settings</h1>
+
+                <!-- User Preferences -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">User Preferences</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">Language</h6>
+                                        <p class="mb-1 text-muted">English</p>
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-primary">Change</button>
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">Timezone</h6>
+                                        <p class="mb-1 text-muted">GMT+3</p>
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-primary">Change</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Management -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Account Management</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">Change Password</h6>
+                                        <p class="mb-1 text-muted">Update your account password</p>
+                                    </div>
+                                    <i class="bi bi-chevron-right"></i>
+                                </div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">Update Profile</h6>
+                                        <p class="mb-1 text-muted">Modify your profile information</p>
+                                    </div>
+                                    <i class="bi bi-chevron-right"></i>
+                                </div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">Manage Linked Accounts</h6>
+                                        <p class="mb-1 text-muted">Connect or disconnect external accounts</p>
+                                    </div>
+                                    <i class="bi bi-chevron-right"></i>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Settings -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">System Settings</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">Notifications</h6>
+                                        <p class="mb-1 text-muted">Enable or disable system notifications</p>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">Default Dashboard View</h6>
+                                        <p class="mb-1 text-muted">Set your preferred dashboard layout</p>
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-primary">Configure</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
