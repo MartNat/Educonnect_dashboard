@@ -119,6 +119,46 @@ http://127.0.0.1:5000
 
 ---
 
+## User Manual
+
+### **1. Navigation**
+- Use the **sidebar menu** to navigate between sections:
+  - **Dashboard**: Overview of key metrics.
+  - **Students**: Manage student profiles and view conversion probabilities.
+  - **Applications**: Track application statuses.
+  - **Analytics**: Analyze trends and performance.
+  - **Tasks**: Manage and assign tasks.
+
+### **2. Adding a New Student**
+1. Go to the **Students** page.
+2. Click the **"Add New Student"** button.
+3. Fill out the form in the modal:
+   - Full Name
+   - Email
+   - Phone
+   - Course of Study
+   - Level of Study
+4. Click **"Add Student"** to save.
+
+### **3. Logging an Interaction**
+1. Go to a student's profile.
+2. Click **"Log Interaction"**.
+3. Select the interaction type (e.g., call, email).
+4. Add notes and submit.
+
+### **4. Viewing Conversion Probability**
+- Conversion probabilities are displayed as progress bars on the **Students** page.
+- Colors indicate the likelihood:
+  - **Green**: High probability (>70%)
+  - **Yellow**: Medium probability (40-70%)
+  - **Red**: Low probability (<40%)
+
+### **5. Managing Tasks**
+1. Navigate to the **Tasks** page.
+2. View, add, or update tasks related to student applications.
+
+---
+
 ## Future Enhancements
 1. **Authentication**: Add user login/logout functionality for secure access.
 2. **Advanced Analytics**: Provide detailed reports and visualizations.
