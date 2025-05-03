@@ -1,0 +1,101 @@
+<div class="modal fade" id="logInteractionModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Log New Interaction</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="logInteractionForm" action="{{ url_for('log_interaction_api', student_id=student.id) }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Interaction Type*</label>
+                        <select class="form-select" name="interaction_type" required>
+                            <option value="">Select Type</option>
+                            <option value="call">Phone Call</option>
+                            <option value="email">Email</option>
+                            <option value="meeting">Meeting</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Notes*</label>
+                        <textarea class="form-control" name="notes" rows="3" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Log Interaction</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.querySelector('#logInteractionForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const data = {};
+    formData.forEach((value, key) => data[key] = value);
+    
+    fetch(this.action, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            // Add new interaction to the list
+            const newInteraction = `
+                <div class="interaction-item mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="badge bg-${data.interaction.type === 'call' ? 'primary' : 'info'}">
+                            <i class="bi bi-${data.interaction.type === 'call' ? 'telephone' : 'envelope'}"></i>
+                            ${data.interaction.type}
+                        </span>
+                        <small class="text-muted">${data.interaction.date}</small>
+                    </div>
+                    <p class="mb-0">${data.interaction.notes}</p>
+                </div>
+            `;
+            
+            document.querySelector('.interaction-timeline').insertAdjacentHTML('afterbegin', newInteraction);
+            
+            // Close modal and reset form
+            const modal = bootstrap.Modal.getInstance(document.getElementById('logInteractionModal'));
+            modal.hide();
+            this.reset();
+            
+            // Show success message
+            const alert = `
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    Interaction logged successfully!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            document.querySelector('.content').insertAdjacentHTML('afterbegin', alert);
+        } else {
+            throw new Error(data.message || 'Failed to log interaction');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        const errorAlert = `
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                ${error.message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        `;
+        document.querySelector('.content').insertAdjacentHTML('afterbegin', errorAlert);
+    });
+});
+</script>

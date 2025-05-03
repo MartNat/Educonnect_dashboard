@@ -29,6 +29,8 @@ body {
 /* Sidebar Styling */
 .sidebar {
     width: 250px;
+    background-color: #f8f9fa; /* Light background for the sidebar */
+    border-right: 1px solid #ddd;
     min-height: 100vh;
     background: #2c3e50;
     padding: 1.5rem;
@@ -122,6 +124,12 @@ body {
     width: 2rem;
     height: 2rem;
     font-size: 1rem;
+}
+
+/* Ensure the table and other content fit within the content area */
+.table-responsive {
+    max-width: 100%;
+    overflow-x: auto;
 }
 
 /* Status Badges */

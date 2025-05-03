@@ -3,73 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ student.name }} - Student Profile</title>
+    <title>{{ student.name }} - EduConnect CRM</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 </head>
 <body>
     <div class="dashboard-container">
-        <!-- Sidebar -->
+        <!-- Sidebar Navigation -->
         <nav class="sidebar">
-            <h3 class="mb-4">EduConnect CRM</h3>
-            <div class="nav flex-column">
-                <a href="{{ url_for('index') }}" class="nav-link text-white {{ is_active_page('index') }}">
-                    <i class="bi bi-house-door"></i> Dashboard
-                </a>
-                <a href="{{ url_for('students') }}" class="nav-link text-white {{ is_active_page('students') }}">
-                    <i class="bi bi-people"></i> Students
-                </a>
-            </div>
+            <h2>Menu</h2>
+            <ul>
+                <li>
+                    <a href="{{ url_for('index') }}" class="nav-link {{ 'active' if request.endpoint == 'index' }}">
+                        <i class="bi bi-house-door"></i> Dashboard
+                    </a>
+                </li>
+                <!-- ... other navigation items ... -->
+            </ul>
         </nav>
 
         <!-- Main Content -->
         <div class="content">
             <div class="container-fluid">
-                <!-- Profile Header -->
-                <div class="row mb-4">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="profile-card">
-                                    <div class="profile-header">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <div class="d-flex align-items-center mb-2">
-                                                    <div class="avatar bg-primary text-white me-3">
-                                                        {{ student.name|first }}
-                                                    </div>
-                                                    <div>
-                                                        <h2 class="mb-0">{{ student.name }}</h2>
-                                                        <p class="text-muted mb-0">{{ student.email }}</p>
-                                                    </div>
-                                                </div>
-                                                <div class="mt-2">
-                                                    <span class="badge bg-light text-dark me-2">
-                                                        <i class="bi bi-telephone"></i> {{ student.phone }}
-                                                    </span>
-                                                    <span class="badge bg-light text-dark me-2">
-                                                        <i class="bi bi-geo-alt"></i> {{ student.destination }}
-                                                    </span>
-                                                    <span class="badge bg-{{ student.status_color }}">
-                                                        {{ student.application_status }}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="text-end">
-                                                <div class="conversion-indicator">
-                                                    <small class="text-muted d-block mb-1">Conversion Probability</small>
-                                                    <div class="progress" style="height: 10px;">
-                                                        <div class="progress-bar bg-{{ 'success' if student.conversion_probability > 70 
-                                                                                    else 'warning' if student.conversion_probability > 40 
-                                                                                    else 'danger' }}"
-                                                             role="progressbar"
-                                                             style="width: {{ student.conversion_probability }}%">
-                                                        </div>
-                                                    </div>
-                                                    <strong class="mt-1 d-block">{{ student.conversion_probability }}%</strong>
-                                                </div>
-                                            </div>
+                <!-- Back Button and Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <a href="{{ url_for('students') }}" class="btn btn-outline-primary">
+                            <i class="bi bi-arrow-left"></i> Back to Students
+                        </a>
+                    </div>
+                    <div>
+                        <button class="btn btn-warning" onclick="toggleEdit()">
+                            <i class="bi bi-pencil"></i> Edit Profile
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Student Overview Card -->
+                <div class="card shadow mb-4">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h2>{{ student.name }}</h2>
+                                <div class="mb-3">
+                                    <span class="badge bg-primary me-2">{{ student.level_of_study }}</span>
+                                    <span class="badge bg-info">{{ student.course_of_study }}</span>
+                                </div>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <p><i class="bi bi-envelope"></i> {{ student.email }}</p>
+                                        <p><i class="bi bi-telephone"></i> {{ student.phone }}</p>
+                                        <p><i class="bi bi-calendar"></i> {{ student.dob }}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><i class="bi bi-geo"></i> {{ student.destination }}</p>
+                                        <p><i class="bi bi-person-badge"></i> {{ student.source }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <div class="conversion-probability">
+                                    <h6>Conversion Probability</h6>
+                                    <div class="progress mb-2">
+                                        <div class="progress-bar bg-{{ 'success' if student.conversion_probability > 70 else 'warning' if student.conversion_probability > 40 else 'danger' }}"
+                                             role="progressbar"
+                                             style="width: {{ student.conversion_probability }}%">
+                                            {{ student.conversion_probability }}%
                                         </div>
                                     </div>
                                 </div>
@@ -78,151 +78,50 @@
                     </div>
                 </div>
 
+                <!-- Application Progress -->
                 <div class="row">
-                    <!-- Student Details -->
-                    <div class="col-md-4">
-                        <div class="card mb-4">
-                            <div class="card-header d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">Student Details</h5>
-                                <button class="btn btn-sm btn-outline-primary" onclick="toggleEdit()">
-                                    <i class="bi bi-pencil"></i> Edit
-                                </button>
-                            </div>
-                            <div class="card-body">
-                                <form id="studentDetailsForm" action="{{ url_for('update_student_details', name=student.name) }}" method="POST">
-                                    <div class="mb-3">
-                                        <label class="form-label">Email</label>
-                                        <input type="email" class="form-control" name="email" value="{{ student.email }}" disabled>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Phone</label>
-                                        <input type="tel" class="form-control" name="phone" value="{{ student.phone }}" disabled>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Source</label>
-                                        <input type="text" class="form-control" value="{{ student.source }}" disabled>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Destination</label>
-                                        <input type="text" class="form-control" value="{{ student.destination }}" disabled>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Course</label>
-                                        <input type="text" class="form-control" value="{{ student.course_of_study }}" disabled>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Level</label>
-                                        <input type="text" class="form-control" value="{{ student.level_of_study }}" disabled>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary d-none" id="saveDetailsBtn">Save Changes</button>
-                                </form>
-                            </div>
-                        </div>
-
-                        <!-- Interaction Stats -->
-                        <div class="card mb-4">
-                            <div class="card-header d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">Interaction Stats</h5>
-                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#logInteractionModal">
-                                    <i class="bi bi-plus-lg"></i> New Interaction
-                                </button>
-                            </div>
-                            <div class="card-body">
-                                <div class="row g-0">
-                                    <div class="col-6">
-                                        <div class="stats-card">
-                                            <i class="bi bi-envelope h2 text-primary"></i>
-                                            <h3>{{ student.email_responses or 0 }}</h3>
-                                            <small class="text-muted">Emails</small>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="stats-card">
-                                            <i class="bi bi-telephone h2 text-primary"></i>
-                                            <h3>{{ student.call_responses or 0 }}</h3>
-                                            <small class="text-muted">Calls</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Interaction History -->
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <h5 class="mb-0">Interaction History</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="interaction-timeline">
-                                    {% if student.interactions %}
-                                        {% for interaction in student.interactions|sort(attribute='date', reverse=true) %}
-                                            <div class="interaction-item">
-                                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                                    <div>
-                                                        <span class="badge bg-{{ 'primary' if interaction.type == 'call' else 'info' }}">
-                                                            <i class="bi bi-{{ 'telephone' if interaction.type == 'call' else 'envelope' }}"></i>
-                                                            {{ interaction.type|title }}
-                                                        </span>
-                                                    </div>
-                                                    <small class="text-muted">{{ interaction.date }}</small>
-                                                </div>
-                                                <p class="mb-0">{{ interaction.notes }}</p>
-                                            </div>
-                                        {% endfor %}
-                                    {% else %}
-                                        <div class="text-center text-muted py-3">
-                                            <i class="bi bi-clock-history h3"></i>
-                                            <p>No interactions recorded yet</p>
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Applications and Timeline -->
                     <div class="col-md-8">
-                        <div class="card mb-4">
+                        <div class="card shadow mb-4">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h5 class="mb-0">Applications</h5>
-                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newApplicationModal">
-                                    <i class="bi bi-plus-lg"></i> New Application
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#newApplicationModal">
+                                    <i class="bi bi-plus"></i> New Application
                                 </button>
                             </div>
                             <div class="card-body">
                                 {% if student.applications %}
                                     {% for app in student.applications %}
                                     <div class="application-card mb-4">
-                                        <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <div class="d-flex justify-content-between mb-3">
                                             <div>
-                                                <h5>{{ app.school_name }}</h5>
+                                                <h6 class="mb-1">{{ app.university }}</h6>
                                                 <p class="text-muted mb-0">{{ app.program }}</p>
                                             </div>
                                             <span class="badge bg-{{ app.status_color }}">{{ app.status }}</span>
                                         </div>
-                                        <div class="application-progress">
-                                            <div class="progress-step mb-2">
+                                        <div class="application-timeline">
+                                            <div class="timeline-item {{ 'completed' if app.documents_submitted }}">
                                                 <div class="form-check">
                                                     <input type="checkbox" class="form-check-input" 
                                                            {{ 'checked' if app.documents_submitted }}
-                                                           onchange="updateApplicationStatus('{{ app.id }}', 'documents_submitted', this.checked)">
+                                                           onchange="updateApplicationStatus('{{ app.id }}', 'documents', this.checked)">
                                                     <label class="form-check-label">Documents Submitted</label>
                                                 </div>
                                             </div>
-                                            <div class="progress-step mb-2">
+                                            <div class="timeline-item {{ 'completed' if app.offer_received }}">
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" 
+                                                    <input type="checkbox" class="form-check-input"
                                                            {{ 'checked' if app.offer_received }}
-                                                           onchange="updateApplicationStatus('{{ app.id }}', 'offer_received', this.checked)">
+                                                           onchange="updateApplicationStatus('{{ app.id }}', 'offer', this.checked)">
                                                     <label class="form-check-label">Offer Received</label>
                                                 </div>
                                             </div>
-                                            <div class="progress-step mb-2">
+                                            <div class="timeline-item {{ 'completed' if app.placement_confirmed }}">
                                                 <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" 
-                                                           {{ 'checked' if app.offer_accepted }}
-                                                           onchange="updateApplicationStatus('{{ app.id }}', 'offer_accepted', this.checked)">
-                                                    <label class="form-check-label">Offer Accepted</label>
+                                                    <input type="checkbox" class="form-check-input"
+                                                           {{ 'checked' if app.placement_confirmed }}
+                                                           onchange="updateApplicationStatus('{{ app.id }}', 'placement', this.checked)">
+                                                    <label class="form-check-label">Placement Confirmed</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -233,20 +132,28 @@
                                 {% endif %}
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Interaction Log -->
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="mb-0">Interaction History</h5>
+                    <!-- Interaction History -->
+                    <div class="col-md-4">
+                        <div class="card shadow mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Interactions</h5>
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#logInteractionModal">
+                                    <i class="bi bi-plus"></i> Log Interaction
+                                </button>
                             </div>
                             <div class="card-body">
                                 <div class="interaction-timeline">
                                     {% if student.interactions %}
                                         {% for interaction in student.interactions %}
                                         <div class="interaction-item mb-3">
-                                            <div class="d-flex justify-content-between">
-                                                <small class="text-muted">{{ interaction.created_at }}</small>
-                                                <span class="badge bg-info">{{ interaction.type }}</span>
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <span class="badge bg-{{ 'primary' if interaction.type == 'call' else 'info' }}">
+                                                    <i class="bi bi-{{ 'telephone' if interaction.type == 'call' else 'envelope' }}"></i>
+                                                    {{ interaction.type }}
+                                                </span>
+                                                <small class="text-muted">{{ interaction.date }}</small>
                                             </div>
                                             <p class="mb-0">{{ interaction.notes }}</p>
                                         </div>
@@ -263,99 +170,11 @@
         </div>
     </div>
 
-    <!-- Log Interaction Modal -->
-    <div class="modal fade" id="logInteractionModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Log New Interaction</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <form action="{{ url_for('log_interaction', name=student.name) }}" method="POST">
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label class="form-label">Interaction Type</label>
-                            <select class="form-select" name="interaction_type" required>
-                                <option value="call">Call</option>
-                                <option value="email">Email</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Notes</label>
-                            <textarea class="form-control" name="notes" rows="4" 
-                                    placeholder="Enter details about the interaction..." required></textarea>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Save Interaction</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- New Application Modal -->
-    <div class="modal fade" id="newApplicationModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">New Application</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <form action="{{ url_for('add_application', student_id=student.id) }}" method="POST">
-                    <div class="modal-body">
-                        <input type="hidden" name="student_name" value="{{ student.name }}">
-                        <div class="mb-3">
-                            <label class="form-label">School Name</label>
-                            <input type="text" class="form-control" name="school_name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Program</label>
-                            <input type="text" class="form-control" name="program" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Create Application</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    <!-- Modals -->
+    {% include 'modals/new_application_modal.html' %}
+    {% include 'modals/log_interaction_modal.html' %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function toggleEdit() {
-            const form = document.getElementById('studentDetailsForm');
-            const inputs = form.querySelectorAll('input');
-            const saveBtn = document.getElementById('saveDetailsBtn');
-            
-            inputs.forEach(input => {
-                input.disabled = !input.disabled;
-            });
-            
-            saveBtn.classList.toggle('d-none');
-        }
-
-        function updateApplicationStatus(appId, field, value) {
-            fetch(`/api/application/${appId}/update`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    field: field,
-                    value: value
-                })
-            }).then(response => {
-                if (response.ok) {
-                    location.reload();
-                } else {
-                    alert('Failed to update application status');
-                }
-            });
-        }
-    </script>
+    <script src="{{ url_for('static', filename='js/profile.js') }}"></script>
 </body>
 </html>

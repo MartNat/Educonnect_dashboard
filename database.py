@@ -65,11 +65,11 @@ def init_db():
         c.execute('''
             CREATE TABLE IF NOT EXISTS interactions (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                student_id INTEGER,
+                student_id INTEGER NOT NULL,
                 type TEXT NOT NULL,
-                notes TEXT,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (student_id) REFERENCES students(id)
+                notes TEXT NOT NULL,
+                date TEXT NOT NULL,
+                FOREIGN KEY (student_id) REFERENCES students (id)
             )
         ''')
 
@@ -154,39 +154,52 @@ def add_student(student_data):
         conn.close()
 
 def get_all_students():
-
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    c = conn.cursor()
-    
+    conn = None
     try:
-        c.execute('''
-            SELECT s.*, 
-                   CASE 
-                       WHEN s.application_status = 'Not Started' THEN 'secondary'
-                       WHEN s.application_status = 'In Progress' THEN 'primary'
-                       WHEN s.application_status = 'Completed' THEN 'success'
-                       ELSE 'warning'
-                   END as status_color
-            FROM students s 
-            ORDER BY s.created_at DESC
-        ''')
-        students = [dict(row) for row in c.fetchall()]
+        conn = sqlite3.connect('educonnect.db')
+        c = conn.cursor()
         
-        # Get applications for each student
-        for student in students:
-            c.execute('''
-                SELECT * FROM applications 
-                WHERE student_id = ?
-            ''', (student['id'],))
-            student['applications'] = [dict(row) for row in c.fetchall()]
-            
+        c.execute('''
+            SELECT id, name, email, phone, source, destination, 
+                   course_of_study, level_of_study, application_status,
+                   conversion_probability
+            FROM students
+            ORDER BY name
+        ''')
+        
+        students = []
+        for row in c.fetchall():
+            student = {
+                'id': row[0],
+                'name': row[1],
+                'email': row[2],
+                'phone': row[3],
+                'source': row[4],
+                'destination': row[5],
+                'course_of_study': row[6],
+                'level_of_study': row[7],
+                'application_status': row[8],
+                'conversion_probability': row[9]
+            }
+            students.append(student)
+        
         return students
-    except sqlite3.Error as e:
-        print(f"Error fetching students: {e}")
+    except Exception as e:
+        print(f"Database error: {str(e)}")
         return []
     finally:
-        conn.close()
+        if conn:
+            conn.close()
+
+def get_status_color(status):
+    status_colors = {
+        'New': 'secondary',
+        'In Progress': 'primary',
+        'Pending': 'warning',
+        'Completed': 'success',
+        'Rejected': 'danger'
+    }
+    return status_colors.get(status, 'secondary')
 
 def get_student_by_name(name):
     conn = sqlite3.connect(DB_PATH)
@@ -273,31 +286,35 @@ def get_student_interactions(student_id):
     finally:
         conn.close()
 
-def add_interaction(student_id, interaction_type, notes):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    
+def add_interaction(interaction_data):
+    conn = None
     try:
-        # Add the interaction record
+        conn = sqlite3.connect('educonnect.db')
+        c = conn.cursor()
+        
         c.execute('''
-            INSERT INTO interactions (student_id, type, notes)
-            VALUES (?, ?, ?)
-        ''', (student_id, interaction_type, notes))
-        
-        # Update the interaction counter
-        update_interaction_count(student_id, interaction_type)
-        
-        # Update conversion probability
-        update_conversion_probability(student_id)
+            INSERT INTO interactions (
+                student_id, type, notes, date
+            ) VALUES (?, ?, ?, ?)
+        ''', (
+            interaction_data['student_id'],
+            interaction_data['type'],
+            interaction_data['notes'],
+            interaction_data['date']
+        ))
         
         conn.commit()
-        return True
+        return c.lastrowid
+        
     except sqlite3.Error as e:
         print(f"Error adding interaction: {e}")
-        conn.rollback()
-        return False
+        if conn:
+            conn.rollback()
+        return None
+        
     finally:
-        conn.close()
+        if conn:
+            conn.close()
 
 def update_interaction_count(student_id, interaction_type):
     conn = sqlite3.connect(DB_PATH)

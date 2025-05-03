@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+from flask_wtf.csrf import CSRFProtect
 from functools import wraps
 from student_segmentation import load_model, predict_conversion, calculate_initial_probability
 from database import (
@@ -35,9 +36,11 @@ from database import (
 from datetime import datetime
 import sqlite3
 import json
+from werkzeug.exceptions import BadRequest
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key-here'
+csrf = CSRFProtect(app)  # Add CSRF protection
 
 # Initialize database and load model
 init_db()
@@ -53,34 +56,23 @@ def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if 'user_id' not in session:
-            # Store the requested endpoint in the URL parameters
-            return redirect(url_for('login', next=request.endpoint))
+            return redirect(url_for('login'))
         return f(*args, **kwargs)
     return decorated_function
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if 'user_id' in session:
-        return redirect(url_for('index'))
-        
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
         
         user = verify_user(email, password)
-        
         if user:
             session['user_id'] = user['id']
-            session['user_name'] = user['name']
-            session['user_role'] = user['role']
-            session['logged_in'] = True
+            return redirect(url_for('index'))
+        else:
+            flash('Invalid credentials', 'error')
             
-            # Redirect to the next page or index
-            next_page = request.args.get('next', 'index')
-            return redirect(url_for(next_page))
-            
-        flash('Invalid email or password', 'error')
-    
     return render_template('login.html')
 
 @app.route('/logout')
@@ -94,47 +86,68 @@ def logout():
 def index():
     return render_template("index.html", page="index")
 
-@app.route("/students")
+@app.route('/students')
 @login_required
 def students():
     try:
-        # Your students page logic here
-        return render_template('students.html', page="students")
+        # Get all students from database
+        all_students = get_all_students()
+        
+        return render_template(
+            'students.html',
+            students=all_students,
+            page="students"
+        )
     except Exception as e:
+        print(f"Error in students route: {str(e)}")
         flash('Error loading students page', 'error')
         return redirect(url_for('index'))
 
 @app.route('/add_new_student', methods=['POST'])
-@login_required
 def add_new_student():
     try:
-        new_student = {
-            'name': request.form['name'],
-            'email': request.form.get('email'),
-            'phone': request.form.get('phone'),
-            'source': request.form['source'],
-            'destination': request.form['destination'],
-            'course_of_study': request.form['course_of_study'],
-            'level_of_study': request.form['level_of_study'],
+        data = request.get_json()
+        if not data:
+            raise BadRequest("No data provided")
+        
+        required_fields = ['name', 'email', 'phone', 'course_of_study', 'level_of_study']
+        for field in required_fields:
+            if not data.get(field):
+                raise BadRequest(f"Missing required field: {field}")
+        
+        # Add student to database
+        student = {
+            'name': data['name'],
+            'email': data['email'],
+            'phone': data['phone'],
+            'course_of_study': data['course_of_study'],
+            'level_of_study': data['level_of_study'],
+            'source': data.get('source'),
+            'destination': data.get('destination'),
+            'application_status': 'New',
+            'application_status_color': 'secondary',
+            'conversion_probability': 0
         }
-        # Add student and get ID
-        student_id = add_student(new_student)
-        if student_id:
-            # Calculate initial probability
-            initial_probability = calculate_initial_probability(new_student)
-            # Update the conversion probability
-            update_conversion_probability(student_id, initial_probability)
-            # Get updated student data
-            student = get_student_by_name(new_student['name'])
-            flash(f"Student {new_student['name']} added successfully! Initial conversion probability: {initial_probability}%", 'success')
-            return redirect(url_for('students', new_student=student_id))
-        else:
-            flash('Error adding student', 'error')
-        return redirect(url_for('students'))
+        
+        # TODO: Add your database insertion code here
+        # db.students.insert_one(student)
+        
+        return jsonify({
+            'success': True,
+            'student': student
+        })
+        
+    except BadRequest as e:
+        return jsonify({
+            'success': False,
+            'message': str(e)
+        }), 400
     except Exception as e:
         print(f"Error in add_new_student: {str(e)}")
-        flash(f'Error adding student: {str(e)}', 'error')
-        return redirect(url_for('students'))
+        return jsonify({
+            'success': False,
+            'message': 'Internal server error'
+        }), 500
 
 @app.route("/student/<name>/update", methods=['POST'])
 def update_student_details(name):
@@ -151,9 +164,10 @@ def update_student_details(name):
     conn.close()
     return redirect(url_for('student_profile', name=name))
 
+# First route (keep this one for logging interactions from the profile page)
 @app.route('/student/<name>/interaction', methods=['POST'])
 @login_required
-def log_interaction(name):
+def log_student_interaction(name):  # Changed function name
     try:
         student = get_student_by_name(name)
         if not student:
@@ -172,6 +186,57 @@ def log_interaction(name):
         print(f"Error logging interaction: {e}")
         flash('Error logging interaction', 'error')
         return redirect(url_for('student_profile', name=name))
+
+# Second route (keep this one for API calls)
+@app.route('/log_interaction/<int:student_id>', methods=['POST'])
+@login_required
+def log_interaction_api(student_id):  # Changed function name
+    try:
+        data = request.get_json()
+        if not data:
+            raise BadRequest("No data provided")
+
+        # Validate required fields
+        required_fields = ['interaction_type', 'notes']
+        for field in required_fields:
+            if not data.get(field):
+                raise BadRequest(f"Missing required field: {field}")
+
+        # Create interaction object
+        interaction = {
+            'student_id': student_id,
+            'type': data['interaction_type'],
+            'notes': data['notes'],
+            'date': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        }
+
+        # Add to database
+        interaction_id = add_interaction(interaction)
+        if interaction_id:
+            # Update interaction counts
+            update_interaction_count(student_id, data['interaction_type'])
+            
+            # Update conversion probability
+            update_conversion_probability(student_id)
+
+            return jsonify({
+                'success': True,
+                'interaction': interaction
+            })
+        else:
+            raise Exception("Failed to add interaction")
+
+    except BadRequest as e:
+        return jsonify({
+            'success': False,
+            'message': str(e)
+        }), 400
+    except Exception as e:
+        print(f"Error logging interaction: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': 'Internal server error'
+        }), 500
 
 @app.route('/student/<int:student_id>/application', methods=['POST'])
 @login_required
